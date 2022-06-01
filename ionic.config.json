@@ -1,0 +1,7 @@
+{
+  "name": "veat",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue"
+}
