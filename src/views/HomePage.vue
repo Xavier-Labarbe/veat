@@ -1,68 +1,118 @@
 <template>
-  <ion-page>
-    <ion-header :translucent="true">
-      <ion-toolbar>
-        <ion-title>Blank</ion-title>
-      </ion-toolbar>
-    </ion-header>
-    
-    <ion-content :fullscreen="true">
-      <ion-header collapse="condense">
-        <ion-toolbar>
-          <ion-title size="large">Blank</ion-title>
-        </ion-toolbar>
-      </ion-header>
-    
-      <div id="container">
-        <strong>Ready to create an app?</strong>
-        <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-      </div>
-    </ion-content>
-  </ion-page>
+  <ion-content>
+    <swiper :slidesPerView="3.5" :spaceBetween="10" :slidesOffsetBefore="11">
+      <swiper-slide v-for="(cat, key) in categories" :key="key">
+        <img :src="(cat as any).img" alt="test" />
+      </swiper-slide>
+    </swiper>
+
+    <swiper
+      :slidesPerView="1.05"
+      :spaceBetween="10"
+      :centeredSlides="true"
+      :loop="true"
+    >
+      <swiper-slide v-for="(h, index) in highlights" :key="index">
+        <img :src="(h as any).img" alt="test" />
+      </swiper-slide>
+    </swiper>
+
+    <ion-text color="dark"><b style="padding-left: 10px">Featured</b></ion-text>
+
+    <swiper :slidesPerView="1" :spaceBetween="10">
+      <swiper-slide
+        v-for="(f, index) in featured"
+        :key="index"
+        class="featured-slide"
+      >
+        <img :src="(f as any).img" alt="test" />
+        <div class="info">
+          <ion-text color="dark"
+            ><b>{{(f as any).name}}</b>
+          </ion-text>
+          <span>
+            <ion-icon name="star-outline" color="secondary"></ion-icon>
+            <ion-text color="secondary">{{(f as any).rating}}</ion-text>
+          </span>
+          <span>
+            <ion-icon name="location-outline"></ion-icon>
+            {{ (f as any).distance }}
+          </span>
+        </div>
+      </swiper-slide>
+    </swiper>
+  </ion-content>
 </template>
 
 <script lang="ts">
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
-import { defineComponent } from 'vue';
+import { IonContent, IonText, IonIcon } from "@ionic/vue";
+import { defineComponent } from "vue";
+import "swiper/scss";
+import "@ionic/vue/css/ionic-swiper.css";
+import { Swiper, SwiperSlide } from "swiper/vue";
+import axios from "axios";
+
+export interface ICat {
+  title: string;
+  img: string;
+}
 
 export default defineComponent({
-  name: 'HomePage',
+  name: "HomePage",
   components: {
     IonContent,
-    IonHeader,
-    IonPage,
-    IonTitle,
-    IonToolbar
-  }
+    IonText,
+    IonIcon,
+    Swiper,
+    SwiperSlide,
+  },
+  data() {
+    return {
+      categories: [],
+      highlights: [],
+      featured: [],
+
+      featuredSlideOpts: {
+        slidesPerView: 1.2,
+        spaceBetween: 10,
+        freeMode: true,
+      },
+    };
+  },
+  methods: {
+    getData: function () {
+      axios
+        .get("https://devdactic.fra1.digitaloceanspaces.com/foodui/home.json")
+        .then((response) => {
+          this.categories = response.data.categories;
+          this.highlights = response.data.highlights;
+          this.featured = response.data.featured;
+        });
+    },
+  },
+  mounted() {
+    this.getData();
+  },
 });
 </script>
 
 <style scoped>
-#container {
-  text-align: center;
-  
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+ion-slides {
+  padding-left: 15px;
+  padding-right: 15px;
+  margin-top: 15px;
+  margin-bottom: 15px;
 }
 
-#container strong {
-  font-size: 20px;
-  line-height: 26px;
+.featured-slide {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
-#container p {
-  font-size: 16px;
-  line-height: 22px;
-  
-  color: #8c8c8c;
-  
-  margin: 0;
-}
-
-#container a {
-  text-decoration: none;
+.info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 </style>
