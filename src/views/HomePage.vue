@@ -70,7 +70,7 @@
         :key="index"
         class="featured-slide"
       >
-        <ion-card>
+        <ion-card :router-link="'/restaurant/'+(f as any).name">
           <img :src="(f as any).img" alt="test" />
           <div class="info">
             <ion-card-header>
@@ -101,7 +101,11 @@
     <ion-text color="dark"
       ><b style="padding-left: 10px">Restaurants</b></ion-text
     >
-    <ion-card v-for="(restaurant, key) in featured" :key="key">
+    <ion-card
+      v-for="(restaurant, key) in featured"
+      :key="key"
+      :router-link="'/restaurant/'+(restaurant as any).name"
+    >
       <img :src="(restaurant as any).img" alt="test" />
       <div class="info">
         <ion-card-header>
@@ -149,6 +153,7 @@ import {
   IonCardContent,
 } from "@ionic/vue";
 import { defineComponent } from "vue";
+import { useRouter } from "vue-router";
 import "swiper/scss";
 import "@ionic/vue/css/ionic-swiper.css";
 import { Swiper, SwiperSlide } from "swiper/vue";
@@ -203,6 +208,10 @@ export default defineComponent({
       const offset = $ev.detail.scrollTop;
       this.showLocationDetail = offset > 40;
     },
+  },
+  setup() {
+    const router = useRouter();
+    return { router };
   },
   mounted() {
     this.getData();
