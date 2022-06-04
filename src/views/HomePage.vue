@@ -97,6 +97,38 @@
         </ion-card>
       </swiper-slide>
     </swiper>
+
+    <ion-text color="dark"
+      ><b style="padding-left: 10px">Restaurants</b></ion-text
+    >
+    <ion-card v-for="(restaurant, key) in featured" :key="key">
+      <img :src="(restaurant as any).img" alt="test" />
+      <div class="info">
+        <ion-card-header>
+          <ion-card-title color="dark"
+            ><b>{{(restaurant as any).name}}</b>
+          </ion-card-title>
+        </ion-card-header>
+
+        <ion-card-content>
+          <ion-row>
+            <span>
+              <ion-icon name="star-outline" color="secondary"></ion-icon>
+              <ion-text
+                color="secondary"
+                >{{(restaurant as any).rating}}</ion-text
+              >
+            </span>
+          </ion-row>
+          <ion-row>
+            <span>
+              <ion-icon name="location-outline"></ion-icon>
+              {{ (restaurant as any).distance }}
+            </span>
+          </ion-row>
+        </ion-card-content>
+      </div>
+    </ion-card>
   </ion-content>
 </template>
 
