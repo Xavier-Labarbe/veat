@@ -27,3 +27,10 @@ export default {
     </swiper-slide>
   </swiper>
 </template>
+<style>
+.featured-slide {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+</style>
