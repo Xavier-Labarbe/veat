@@ -4,184 +4,36 @@
       <ion-refresher-content></ion-refresher-content>
     </ion-refresher>
 
-    <ion-row class="info-row">
-      <ion-col size="2" class="ion-padding-start">
-        <img src="../assets/delivery.png" />
-      </ion-col>
-      <ion-col size="8">
-        <ion-text color="dark">
-          <span>Travail, Maintenant</span><br />
-          <b>Bordeaux</b>
-          <ion-icon name="chevron-down-outline" color="primary"></ion-icon>
-        </ion-text>
-      </ion-col>
-      <ion-col size="2">
-        <ion-button fill="clear">
-          <ion-icon name="person-outline"></ion-icon>
-        </ion-button>
-      </ion-col>
-    </ion-row>
+    <home-header />
 
-    <div class="sticky-row">
-      <ion-row>
-        <ion-col>
-          <ion-text
-            class="ion-padding-start"
-            color="dark"
-            v-bind:class="{
-              'location-visible': showLocationDetail,
-              'location-hidden': !showLocationDetail,
-            }"
-          >
-            <b>Bordeaux</b>
-          </ion-text>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col size="10">
-          <ion-searchbar
-            placeholder="Restaurants, commerces, plats"
-          ></ion-searchbar>
-        </ion-col>
-        <ion-col size="2">
-          <ion-button fill="clear">
-            <ion-icon name="options-outline"></ion-icon>
-          </ion-button>
-        </ion-col>
-      </ion-row>
-    </div>
+    <home-categories :categories="categories" />
 
-    <swiper
-      :slidesPerView="3.5"
-      :spaceBetween="10"
-      :slidesOffsetBefore="11"
-      style="margin-bottom: 10px"
-    >
-      <swiper-slide v-for="(cat, key) in categories" :key="key">
-        <img :src="(cat as any).img" alt="test" />
-      </swiper-slide>
-    </swiper>
+    <featured-restaurants :featured="featured" />
 
-    <ion-text color="dark"><b style="padding-left: 10px">A là une</b></ion-text>
-
-    <swiper :slidesPerView="1.2" :spaceBetween="10">
-      <swiper-slide
-        v-for="(f, index) in featured"
-        :key="index"
-        class="featured-slide"
-      >
-        <ion-card :router-link="'/restaurant/'+(f as any).name">
-          <img :src="(f as any).img" alt="test" />
-          <div class="info">
-            <ion-card-header>
-              <ion-card-title color="dark"
-                ><b>{{(f as any).name}}</b>
-              </ion-card-title>
-            </ion-card-header>
-
-            <ion-card-content>
-              <ion-row>
-                <span>
-                  <ion-icon name="star-outline" color="secondary"></ion-icon>
-                  <ion-text color="secondary">{{(f as any).rating}}</ion-text>
-                </span>
-              </ion-row>
-              <ion-row>
-                <span>
-                  <ion-icon name="location-outline"></ion-icon>
-                  {{ (f as any).distance }}
-                </span>
-              </ion-row>
-            </ion-card-content>
-          </div>
-        </ion-card>
-      </swiper-slide>
-    </swiper>
-
-    <ion-text color="dark"
-      ><b style="padding-left: 10px">Restaurants</b></ion-text
-    >
-    <ion-card
-      v-for="(restaurant, key) in featured"
-      :key="key"
-      :router-link="'/restaurant/'+(restaurant as any).name"
-    >
-      <img :src="(restaurant as any).img" alt="test" />
-      <div class="info">
-        <ion-card-header>
-          <ion-card-title color="dark"
-            ><b>{{(restaurant as any).name}}</b>
-          </ion-card-title>
-        </ion-card-header>
-
-        <ion-card-content>
-          <ion-row>
-            <span>
-              <ion-icon name="star-outline" color="secondary"></ion-icon>
-              <ion-text
-                color="secondary"
-                >{{(restaurant as any).rating}}</ion-text
-              >
-            </span>
-          </ion-row>
-          <ion-row>
-            <span>
-              <ion-icon name="location-outline"></ion-icon>
-              {{ (restaurant as any).distance }}
-            </span>
-          </ion-row>
-        </ion-card-content>
-      </div>
-    </ion-card>
+    <restaurants-list :restaurants="featured" />
   </ion-content>
 </template>
 
 <script lang="ts">
-import {
-  IonContent,
-  IonText,
-  IonIcon,
-  IonRefresher,
-  IonRefresherContent,
-  IonRow,
-  IonCol,
-  IonSearchbar,
-  IonButton,
-  IonCard,
-  IonCardTitle,
-  IonCardHeader,
-  IonCardContent,
-} from "@ionic/vue";
+import { IonContent, IonRefresher, IonRefresherContent } from "@ionic/vue";
 import { defineComponent } from "vue";
 import { useRouter } from "vue-router";
-import "swiper/scss";
-import "@ionic/vue/css/ionic-swiper.css";
-import { Swiper, SwiperSlide } from "swiper/vue";
+import FeaturedRestaurants from "../components/home/FeaturedRestaurants.vue";
+import RestaurantsList from "@/components/home/RestaurantsList.vue";
+import HomeHeader from "@/components/home/HomeHeader.vue";
+import HomeCategories from "@/components/home/HomeCategories.vue";
 import axios from "axios";
-
-export interface ICat {
-  title: string;
-  img: string;
-}
 
 export default defineComponent({
   name: "HomePage",
   components: {
     IonContent,
-    IonText,
-    IonIcon,
     IonRefresher,
     IonRefresherContent,
-    IonRow,
-    IonCol,
-    IonSearchbar,
-    IonButton,
-    IonCard,
-    IonCardHeader,
-    IonCardContent,
-    IonCardTitle,
-    Swiper,
-    SwiperSlide,
+    FeaturedRestaurants,
+    RestaurantsList,
+    HomeHeader,
+    HomeCategories,
   },
   data() {
     return {
