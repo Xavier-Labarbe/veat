@@ -10,7 +10,7 @@
 
     <featured-restaurants :featured="featured" />
 
-    <restaurants-list :restaurants="featured" />
+    <restaurants-list :restaurants="restaurants" />
   </ion-content>
 </template>
 
@@ -39,16 +39,28 @@ export default defineComponent({
     return {
       categories: [],
       featured: [],
+      restaurants: [],
       showLocationDetail: false,
     };
   },
   methods: {
-    getData: function () {
-      axios
+    getData: async function () {
+      await axios
         .get("https://devdactic.fra1.digitaloceanspaces.com/foodui/home.json")
         .then((response) => {
           this.categories = response.data.categories;
+        });
+    },
+    data: function () {
+      const headers = {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      };
+      axios
+        .get("http://localhost:3000/getHome", { headers })
+        .then((response) => {
           this.featured = response.data.featured;
+          this.restaurants = response.data.restaurants;
         });
     },
     doRefresh: function (event: any) {
@@ -66,6 +78,7 @@ export default defineComponent({
     return { router };
   },
   mounted() {
+    this.data();
     this.getData();
   },
 });

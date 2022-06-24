@@ -37,16 +37,13 @@ export default {
         <ion-row>
           <span>
             <ion-icon name="star-outline" color="secondary"></ion-icon>
-            <ion-text
-              color="secondary"
-              >{{(restaurant as any).rating}}</ion-text
-            >
+            <ion-text color="secondary">{{(restaurant as any).rates}}</ion-text>
           </span>
         </ion-row>
         <ion-row>
           <span>
             <ion-icon name="location-outline"></ion-icon>
-            {{ (restaurant as any).distance }}
+            {{ (restaurant as any).city }}, {{ ((restaurant as any).address)}}
           </span>
         </ion-row>
       </ion-card-content>
