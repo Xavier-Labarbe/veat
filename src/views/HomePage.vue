@@ -1,17 +1,19 @@
 <template>
-  <ion-content scrollEvents="true" @ionScroll="onScroll($event)">
-    <ion-refresher slot="fixed" @ionRefresh="doRefresh($event)">
-      <ion-refresher-content></ion-refresher-content>
-    </ion-refresher>
+  <ion-page>
+    <ion-content scrollEvents="true" @ionScroll="onScroll($event)">
+      <ion-refresher slot="fixed" @ionRefresh="doRefresh($event)">
+        <ion-refresher-content></ion-refresher-content>
+      </ion-refresher>
 
-    <home-header />
+      <home-header />
 
-    <home-categories :categories="categories" />
+      <home-categories :categories="categories" />
 
-    <featured-restaurants :featured="featured" />
+      <featured-restaurants :featured="featured" />
 
-    <restaurants-list :restaurants="restaurants" />
-  </ion-content>
+      <restaurants-list :restaurants="restaurants" />
+    </ion-content>
+  </ion-page>
 </template>
 
 <script lang="ts">
@@ -85,10 +87,6 @@ export default defineComponent({
 </script>
 
 <style scoped>
-ion-content {
-  --padding-top: 40px;
-}
-
 ion-refresher {
   padding-top: calc(env(safe-area-inset-top) + 50px);
 }
