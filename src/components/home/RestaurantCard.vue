@@ -27,7 +27,7 @@ export default {
 </script>
 <template>
   <ion-card :router-link="'/restaurant/'+restaurant.name">
-    <img :src="restaurant.img" alt="test" />
+    <img :src="restaurant.img" alt="test" />‘’
     <div class="info">
       <ion-card-header>
         <ion-card-title color="dark"
