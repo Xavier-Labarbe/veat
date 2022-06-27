@@ -7,13 +7,14 @@
             fill="solid"
             shape="round"
             color="light"
-            :router-link="'/'"
           >
-            <ion-icon
-              slot="icon-only"
-              name="arrow-back"
-              color="primary"
-            ></ion-icon>
+            <ion-back-button default-href="/">
+              <ion-icon
+                  slot="icon-only"
+                  name="arrow-back"
+                  color="primary"
+              ></ion-icon>
+            </ion-back-button>
           </ion-button>
         </ion-buttons>
         <ion-title>{{ data?.name }}</ion-title>
@@ -118,7 +119,7 @@
 </template>
 
 <script lang="ts">
-import { IonContent } from "@ionic/vue";
+import { IonContent, IonButtons, IonPage, IonList, IonIcon, IonBackButton, IonButton, IonTitle, IonToolbar, IonHeader, IonText, IonCol, IonRow, IonLabel, IonItem, IonListHeader } from "@ionic/vue";
 import { defineComponent } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import axios from "axios";
@@ -127,6 +128,18 @@ export default defineComponent({
   name: "RestaurantPage",
   components: {
     IonContent,
+    IonButtons,
+    IonPage,
+    IonList,
+    IonBackButton,
+    IonIcon,
+    IonButton,
+    IonTitle,
+    IonToolbar,
+    IonHeader,
+    IonText,
+    IonCol, IonRow, IonLabel, IonItem,
+    IonListHeader
   },
   data() {
     return {
@@ -169,10 +182,8 @@ export default defineComponent({
 </script>
 
 <style>
-ion-toolbar {
-  ion-icon {
-    font-size: 25px;
-  }
+ion-icon {
+  font-size: 25px;
 }
 
 ion-content {

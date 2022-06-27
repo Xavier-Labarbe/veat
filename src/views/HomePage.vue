@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts">
-import { IonContent, IonRefresher, IonRefresherContent } from "@ionic/vue";
+import { IonContent, IonRefresher, IonRefresherContent, IonPage } from "@ionic/vue";
 import { defineComponent } from "vue";
 import { useRouter } from "vue-router";
 import FeaturedRestaurants from "../components/home/FeaturedRestaurants.vue";
@@ -32,6 +32,7 @@ export default defineComponent({
     IonContent,
     IonRefresher,
     IonRefresherContent,
+    IonPage,
     FeaturedRestaurants,
     RestaurantsList,
     HomeHeader,
@@ -54,12 +55,8 @@ export default defineComponent({
         });
     },
     data: function () {
-      const headers = {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-      };
       axios
-        .get("http://localhost:3000/getHome", { headers })
+        .get("http://localhost:3000/getHome")
         .then((response) => {
           this.featured = response.data.featured;
           this.restaurants = response.data.restaurants;
