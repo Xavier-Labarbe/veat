@@ -55,8 +55,12 @@ export default defineComponent({
         });
     },
     data: function () {
+      const headers = {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      };
       axios
-        .get("http://localhost:3000/getHome")
+        .get("http://localhost:3000/getHome", { headers })
         .then((response) => {
           this.featured = response.data.featured;
           this.restaurants = response.data.restaurants;
