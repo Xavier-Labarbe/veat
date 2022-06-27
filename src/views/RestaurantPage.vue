@@ -1,5 +1,5 @@
 <template>
-  <ion-page>
+  <ion-page ref="page">
     <ion-header>
       <ion-toolbar color="light">
         <ion-buttons slot="start">
@@ -36,7 +36,7 @@
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
-    <ion-content :ionFullscreeen="true">
+    <ion-content class="content" :ionFullscreeen="true">
       <div id="img" class="header-image">
         <img :src="data?.img" />
       </div>
@@ -99,30 +99,39 @@
           v-for="(meal, key) in entry.meals"
           :key="key"
           class="ion-padding meal-row"
+          expand="block" @click="setOpen(true)"
         >
           <ion-col size="8" class="border-bottom">
             <ion-label>
               {{ meal?.name }}
-              <p>{{ meal.info }}</p>
+              <p>{{ meal?.info }}</p>
             </ion-label>
             <ion-text color="dark"
-              ><b>{{ meal.price }}</b></ion-text
+              ><b>{{ meal?.price }}</b></ion-text
             >
           </ion-col>
           <ion-col size="4" class="border-bottom">
             <img :src="meal?.img" />
           </ion-col>
+          <food-modal :is-open="isOpen" @openState="this.isOpen = false" :meal="meal"></food-modal>
         </ion-row>
       </ion-list>
+
     </ion-content>
+    <ion-footer class="footer" collapse="fade">
+      <ion-toolbar>
+        <ion-button class="bar bar-footer">Voire la commande</ion-button>
+      </ion-toolbar>
+    </ion-footer>
   </ion-page>
 </template>
 
 <script lang="ts">
-import { IonContent, IonButtons, IonPage, IonList, IonIcon, IonBackButton, IonButton, IonTitle, IonToolbar, IonHeader, IonText, IonCol, IonRow, IonLabel, IonItem, IonListHeader } from "@ionic/vue";
+import { IonContent, IonButtons, IonPage, IonList, IonIcon, IonFooter, IonBackButton, IonButton, IonTitle, IonToolbar, IonHeader, IonText, IonCol, IonRow, IonLabel, IonItem, IonListHeader, IonModal, actionSheetController, } from "@ionic/vue";
 import { defineComponent } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import axios from "axios";
+import FoodModal from "@/components/home/FoodModal.vue";
 
 export default defineComponent({
   name: "RestaurantPage",
@@ -138,14 +147,19 @@ export default defineComponent({
     IonToolbar,
     IonHeader,
     IonText,
+    IonModal,
+    IonFooter,
     IonCol, IonRow, IonLabel, IonItem,
-    IonListHeader
+    IonListHeader,
+    actionSheetController,
+    FoodModal
   },
   data() {
     return {
       data: {
         name: String,
       },
+      isOpen: false,
       showLocationDetail: false,
       active_category: 0,
       listElements: [],
@@ -169,6 +183,9 @@ export default defineComponent({
           this.data = response.data;
         });
     },
+    setOpen(isOpen: boolean) {
+      this.isOpen = isOpen;
+    },
   },
   setup() {
     const route = useRoute();
@@ -182,6 +199,15 @@ export default defineComponent({
 </script>
 
 <style>
+.content {
+  min-height: calc(100vh - 70px);
+}
+
+.footer {
+  text-align: center;
+  height: 50px;
+}
+
 ion-icon {
   font-size: 25px;
 }
