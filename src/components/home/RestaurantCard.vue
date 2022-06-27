@@ -3,6 +3,7 @@ import {
   IonText,
   IonIcon,
   IonRow,
+  IonCol,
   IonCard,
   IonCardTitle,
   IonCardHeader,
@@ -16,6 +17,7 @@ export default {
     IonText,
     IonIcon,
     IonRow,
+    IonCol,
     IonCard,
     IonCardHeader,
     IonCardContent,
@@ -24,12 +26,12 @@ export default {
 };
 </script>
 <template>
-  <ion-card :router-link="'/restaurant/'+(restaurant as any).name">
-    <img :src="(restaurant as any).img" alt="test" />
+  <ion-card :router-link="'/restaurant/'+restaurant.name">
+    <img :src="restaurant.img" alt="test" />
     <div class="info">
       <ion-card-header>
         <ion-card-title color="dark"
-          ><b>{{(restaurant as any).name}}</b>
+          ><b>{{restaurant.name}}</b>
         </ion-card-title>
       </ion-card-header>
 
@@ -37,13 +39,13 @@ export default {
         <ion-row>
           <span>
             <ion-icon name="star-outline" color="secondary"></ion-icon>
-            <ion-text color="secondary">{{(restaurant as any).rates}}</ion-text>
+            <ion-text color="secondary">{{restaurant.rates}}</ion-text>
           </span>
         </ion-row>
         <ion-row>
           <span>
             <ion-icon name="location-outline"></ion-icon>
-            {{ (restaurant as any).city }}, {{ ((restaurant as any).address)}}
+            {{ restaurant.city }}, {{ restaurant.address}}
           </span>
         </ion-row>
       </ion-card-content>
