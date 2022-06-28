@@ -91,16 +91,17 @@
         </ion-row>
       </div>
 
-      <ion-list v-for="(entry, key) in data.food" :key="key">
+      <ion-list v-for="(category, key) in data.food" :key="key">
         <ion-list-header>
-          <ion-label>{{ entry?.category }}</ion-label>
+          <ion-label>{{ category?.category }}</ion-label>
         </ion-list-header>
         <ion-row
-          v-for="(meal, key) in entry.meals"
-          :key="key"
+          v-for="(meal, mealKey) in category.meals"
+          :key="mealKey"
           class="ion-padding meal-row"
-          expand="block" @click="setOpen(true)"
+          expand="block" @click="setOpenFood(true, key, mealKey)"
         >
+          <food-modal :is-open="isOpenFood" @openState="this.isOpenFood = false"  @addProduct="addToOrder" :meal="data.food[categoryKey].meals[modalKey]"></food-modal>
           <ion-col size="8" class="border-bottom">
             <ion-label>
               {{ meal?.name }}
@@ -113,14 +114,15 @@
           <ion-col size="4" class="border-bottom">
             <img :src="meal?.img" />
           </ion-col>
-          <food-modal :is-open="isOpen" @openState="this.isOpen = false" :meal="meal"></food-modal>
         </ion-row>
       </ion-list>
+
+      <order-modal  :is-open="isOpenOrder" @openState="this.isOpenOrder = false" :order="order" :total="getTotal(order)" @updateOrder="updateOrder"></order-modal>
 
     </ion-content>
     <ion-footer class="footer" collapse="fade">
       <ion-toolbar>
-        <ion-button class="bar bar-footer">Voire la commande</ion-button>
+        <ion-button class="bar bar-footer" @click="setOpenOrder(true)">Voire la commande</ion-button>
       </ion-toolbar>
     </ion-footer>
   </ion-page>
@@ -131,7 +133,8 @@ import { IonContent, IonButtons, IonPage, IonList, IonIcon, IonFooter, IonBackBu
 import { defineComponent } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import axios from "axios";
-import FoodModal from "@/components/home/FoodModal.vue";
+import FoodModal from "@/components/Restaurant/FoodModal.vue";
+import OrderModal from "@/components/Restaurant/OrderModal.vue";
 
 export default defineComponent({
   name: "RestaurantPage",
@@ -152,14 +155,18 @@ export default defineComponent({
     IonCol, IonRow, IonLabel, IonItem,
     IonListHeader,
     actionSheetController,
-    FoodModal
+    FoodModal, OrderModal
   },
   data() {
     return {
       data: {
         name: String,
       },
-      isOpen: false,
+      isOpenOrder: false,
+      isOpenFood: false,
+      modalKey: 0,
+      categoryKey: 0,
+      order: [null],
       showLocationDetail: false,
       active_category: 0,
       listElements: [],
@@ -183,9 +190,51 @@ export default defineComponent({
           this.data = response.data;
         });
     },
-    setOpen(isOpen: boolean) {
-      this.isOpen = isOpen;
+    setOpenFood(isOpen: boolean, categoryKey: number, modalKey: number) {
+      this.categoryKey = categoryKey;
+      this.modalKey = modalKey;
+      this.isOpenFood = isOpen;
     },
+    setOpenOrder(isOpen: boolean){
+      this.isOpenOrder = isOpen;
+    },
+    addToOrder(product: any){
+      var exist = false;
+      var isNull = -1;
+      this.order.forEach((p, index)=>{
+        if ((p as any)?.meal?.id == product.meal.id) {
+          (p as any).quantity = product.quantity
+          exist = true;
+          if((p as any).quantity == 0){
+            isNull = index;
+          }
+        }
+      });
+      if(!exist){
+        this.order.push(product)
+      }
+      if(isNull != -1){
+        this.order.splice(isNull)
+      }
+    },
+    updateOrder(order: any){
+      console.log(order)
+      this.order = order;
+      this.order.forEach((p, index)=>{
+        if((p as any)?.quantity == 0){
+          this.order.splice(index)
+        }
+      });
+    },
+    getTotal(order: any){
+      var total = 0;
+      order.forEach((o: any, index: number)=>{
+        if(o){
+          total += Number((o?.meal?.price*o?.quantity).toFixed(2))
+        }
+      });
+      return total
+    }
   },
   setup() {
     const route = useRoute();
