@@ -33,16 +33,16 @@
       </ion-row>
       <ion-row>
         <ion-col class="light-bg ion-padding-start ion-text-center">
-          <ion-button class="ion-padding-end" v-on:click="addQuantity">+</ion-button>
+          <ion-button class="ion-padding-end" v-on:click="removeQuantity">-</ion-button>
           <ion-text color="dark">
             {{quantity}}
           </ion-text>
-          <ion-button class="ion-padding-start" v-on:click="removeQuantity">-</ion-button>
+          <ion-button class="ion-padding-start" v-on:click="addQuantity">+</ion-button>
         </ion-col>
       </ion-row>
       <ion-footer class="footer" collapse="fade">
         <ion-toolbar>
-          <ion-button class="bar bar-footer" @click="setOpen(false)">Ajouter à la commande</ion-button>
+          <ion-button class="bar bar-footer" @click="addProduct(meal, quantity)">Ajouter à la commande</ion-button>
         </ion-toolbar>
       </ion-footer>
     </ion-content>
@@ -57,11 +57,12 @@ export default defineComponent({
   components: {IonButtons, IonFooter, IonButton, IonTitle, IonHeader, IonModal, IonContent, IonToolbar, IonImg, IonRow, IonCol, IonText},
   data(){
     return{
-      quantity: 0,
+      mealID: "",
+      quantity: 0
     }
   },
   props:{
-    meal: {}
+    meal: {},
   },
   methods:{
     setOpen(state: boolean) {
@@ -74,8 +75,15 @@ export default defineComponent({
       if(this.quantity != 0){
         this.quantity -= 1;
       }
+    },
+    addProduct(meal: {}, quantity: number){
+      this.$emit("addProduct", {
+        meal: meal,
+        quantity: quantity,
+      })
+      this.setOpen(false);
     }
-  }
+  },
 })
 </script>
 
