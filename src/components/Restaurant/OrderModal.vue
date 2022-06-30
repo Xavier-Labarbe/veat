@@ -57,7 +57,7 @@
       </ion-row>
       <ion-footer class="footer" collapse="fade">
         <ion-toolbar>
-          <ion-button class="bar bar-footer" @click="validateOrder(order, total)">Valider la commande</ion-button>
+          <ion-button class="bar bar-footer" @click="validateOrder(order, total, restaurantId)">Valider la commande</ion-button>
         </ion-toolbar>
       </ion-footer>
     </ion-content>
@@ -75,10 +75,12 @@ export default defineComponent({
     return{
     }
   },
-  props:{
-    order: Array,
-    total: Number,
-  },
+  props:["order", "total", "restaurantId"],
+  // props:{
+  //   order: Array,
+  //   total: Number,
+  //   restaurantId: String,
+  // },
   methods:{
     setOpen(state: boolean, order?: any) {
       if(order){
@@ -104,12 +106,12 @@ export default defineComponent({
       });
       return total
     },
-    async validateOrder(order: any, total: number){
+    async validateOrder(order: any, total: number, restaurantId: string){
       ///NEED PAYMENT METHOD
 
       ///
       await axios.post(
-          "http://localhost:3000/addOrder", {meals: order, total: total}
+          "http://localhost:3000/addOrder", {meals: order, total: total, restaurantId: restaurantId}
       )
       this.setOpen(false);
       this.$router.push('/')

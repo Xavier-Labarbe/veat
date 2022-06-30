@@ -117,7 +117,7 @@
         </ion-row>
       </ion-list>
 
-      <order-modal  :is-open="isOpenOrder" @openState="this.isOpenOrder = false" :order="order" :total="getTotal(order)" @updateOrder="updateOrder"></order-modal>
+      <order-modal  :is-open="isOpenOrder" @openState="this.isOpenOrder = false" :order="order" :total="getTotal(order)" :restaurant-id="data.id" @updateOrder="updateOrder"></order-modal>
 
     </ion-content>
     <ion-footer class="footer" collapse="fade">
@@ -160,6 +160,7 @@ export default defineComponent({
   data() {
     return {
       data: {
+        id: String,
         name: String,
       },
       isOpenOrder: false,
