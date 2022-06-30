@@ -3,5 +3,9 @@
   "integrations": {
     "capacitor": {}
   },
-  "type": "vue"
+  "type": "vue",
+  "proxies": [{
+    "path": "/api",
+    "proxyUrl": "http://localhost:3000/"
+  }]
 }

@@ -1,68 +1,94 @@
 <template>
   <ion-page>
-    <ion-header :translucent="true">
-      <ion-toolbar>
-        <ion-title>Blank</ion-title>
-      </ion-toolbar>
-    </ion-header>
-    
-    <ion-content :fullscreen="true">
-      <ion-header collapse="condense">
-        <ion-toolbar>
-          <ion-title size="large">Blank</ion-title>
-        </ion-toolbar>
-      </ion-header>
-    
-      <div id="container">
-        <strong>Ready to create an app?</strong>
-        <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-      </div>
+    <ion-content scrollEvents="true" @ionScroll="onScroll($event)">
+      <ion-refresher slot="fixed" @ionRefresh="doRefresh($event)">
+        <ion-refresher-content></ion-refresher-content>
+      </ion-refresher>
+
+      <home-header />
+
+      <home-categories :categories="categories" />
+
+      <featured-restaurants :featured="featured" />
+
+      <restaurants-list :restaurants="restaurants" />
     </ion-content>
   </ion-page>
 </template>
 
 <script lang="ts">
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
-import { defineComponent } from 'vue';
+import { IonContent, IonRefresher, IonRefresherContent, IonPage } from "@ionic/vue";
+import { defineComponent } from "vue";
+import { useRouter } from "vue-router";
+import FeaturedRestaurants from "../components/home/FeaturedRestaurants.vue";
+import RestaurantsList from "@/components/home/RestaurantsList.vue";
+import HomeHeader from "@/components/home/HomeHeader.vue";
+import HomeCategories from "@/components/home/HomeCategories.vue";
+import axios from "axios";
 
 export default defineComponent({
-  name: 'HomePage',
+  name: "HomePage",
   components: {
     IonContent,
-    IonHeader,
+    IonRefresher,
+    IonRefresherContent,
     IonPage,
-    IonTitle,
-    IonToolbar
-  }
+    FeaturedRestaurants,
+    RestaurantsList,
+    HomeHeader,
+    HomeCategories,
+  },
+  data() {
+    return {
+      categories: [],
+      featured: [],
+      restaurants: [],
+      showLocationDetail: false,
+    };
+  },
+  methods: {
+    getData: async function () {
+      await axios
+        .get("https://devdactic.fra1.digitaloceanspaces.com/foodui/home.json")
+        .then((response) => {
+          this.categories = response.data.categories;
+        });
+    },
+    data: function () {
+      const headers = {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      };
+      axios
+        .get("http://localhost:3000/getHome", { headers })
+        .then((response) => {
+          this.featured = response.data.featured;
+          this.restaurants = response.data.restaurants;
+        });
+    },
+    doRefresh: function (event: any) {
+      setTimeout(() => {
+        event.target.complete();
+      }, 2000);
+    },
+    onScroll: function ($ev: any) {
+      const offset = $ev.detail.scrollTop;
+      this.showLocationDetail = offset > 40;
+    },
+  },
+  setup() {
+    const router = useRouter();
+    return { router };
+  },
+  mounted() {
+    this.data();
+    this.getData();
+  },
 });
 </script>
 
 <style scoped>
-#container {
-  text-align: center;
-  
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-#container strong {
-  font-size: 20px;
-  line-height: 26px;
-}
-
-#container p {
-  font-size: 16px;
-  line-height: 22px;
-  
-  color: #8c8c8c;
-  
-  margin: 0;
-}
-
-#container a {
-  text-decoration: none;
+ion-refresher {
+  padding-top: calc(env(safe-area-inset-top) + 50px);
 }
 </style>
